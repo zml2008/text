@@ -24,26 +24,20 @@
 package net.kyori.text.renderer;
 
 import net.kyori.text.Component;
-import net.kyori.text.ComponentBuilder;
-import net.kyori.text.KeybindComponent;
-import net.kyori.text.ScoreComponent;
-import net.kyori.text.SelectorComponent;
 import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
-import net.kyori.text.event.HoverEvent;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.text.AttributedCharacterIterator;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiFunction;
 
 /**
  * A friendly component renderer.
  */
-public abstract class FriendlyComponentRenderer<C> implements ComponentRenderer<C> {
+public abstract class FriendlyComponentRenderer<C> extends AbstractDeepComponentRenderer<C> {
   public static <C> @NonNull FriendlyComponentRenderer<C> from(final @NonNull BiFunction<C, String, MessageFormat> translations) {
     return new FriendlyComponentRenderer<C>() {
       @Override
@@ -54,49 +48,7 @@ public abstract class FriendlyComponentRenderer<C> implements ComponentRenderer<
   }
 
   @Override
-  public @NonNull Component render(final @NonNull Component component, final @NonNull C context) {
-    if(component instanceof TranslatableComponent) {
-      return this.render((TranslatableComponent) component, context);
-    } else if(component instanceof TextComponent) {
-      final TextComponent.Builder builder = TextComponent.builder(((TextComponent) component).content());
-      return this.deepRender(component, builder, context).build();
-    } else if(component instanceof KeybindComponent) {
-      final KeybindComponent.Builder builder = KeybindComponent.builder(((KeybindComponent) component).keybind());
-      return this.deepRender(component, builder, context).build();
-    } else if(component instanceof ScoreComponent) {
-      final ScoreComponent sc = (ScoreComponent) component;
-      final ScoreComponent.Builder builder = ScoreComponent.builder()
-        .name(sc.name())
-        .objective(sc.objective())
-        .value(sc.value());
-      return this.deepRender(component, builder, context).build();
-    } else if(component instanceof SelectorComponent) {
-      final SelectorComponent.Builder builder = SelectorComponent.builder(((SelectorComponent) component).pattern());
-      return this.deepRender(component, builder, context).build();
-    } else {
-      return component;
-    }
-  }
-
-  private <B extends ComponentBuilder<?, ?>> B deepRender(final Component component, final B builder, final C context) {
-    this.mergeStyle(component, builder, context);
-    component.children().forEach(child -> builder.append(this.render(child, context)));
-    return builder;
-  }
-
-  private <B extends ComponentBuilder<?, ?>> void mergeStyle(final Component component, final B builder, final C context) {
-    builder.mergeColor(component);
-    builder.mergeDecorations(component);
-    builder.clickEvent(component.clickEvent());
-    Optional.ofNullable(component.hoverEvent()).ifPresent(hoverEvent -> {
-      builder.hoverEvent(HoverEvent.of(
-        hoverEvent.action(),
-        this.render(hoverEvent.value(), context)
-      ));
-    });
-  }
-
-  private Component render(final TranslatableComponent component, final C context) {
+  protected @NonNull Component render(final @NonNull TranslatableComponent component, final @NonNull C context) {
     final /* @Nullable */ MessageFormat format = this.translation(context, component.key());
     if(format == null) {
       return component;
@@ -127,7 +79,7 @@ public abstract class FriendlyComponentRenderer<C> implements ComponentRenderer<
       }
     }
 
-    return this.deepRender(component, builder, context).build();
+    return this.deepRender(component, builder, context);
   }
 
   /**
