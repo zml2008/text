@@ -40,6 +40,7 @@ import java.util.Set;
 import static java.util.Objects.requireNonNull;
 
 public final class Style {
+  private static final TextDecoration[] DECORATIONS = TextDecoration.values();
   private static final Style EMPTY = new Style(null, TextDecoration.State.NOT_SET, TextDecoration.State.NOT_SET, TextDecoration.State.NOT_SET, TextDecoration.State.NOT_SET, TextDecoration.State.NOT_SET, null, null, null);;
   private final @Nullable TextColor color;
   private final TextDecoration.State obfuscated;
@@ -85,7 +86,7 @@ public final class Style {
    * @param decorations the decorations
    * @return a style
    */
-  public static @NonNull Style of(final TextDecoration@NonNull... decorations) {
+  public static @NonNull Style of(final @NonNull TextDecoration@NonNull... decorations) {
     final Builder builder = builder();
     for(final TextDecoration decoration : decorations) {
       builder.decoration(decoration, true);
@@ -100,7 +101,7 @@ public final class Style {
    * @param decorations the decorations
    * @return a style
    */
-  public static @NonNull Style of(final @Nullable TextColor color, final TextDecoration@NonNull... decorations) {
+  public static @NonNull Style of(final @Nullable TextColor color, final @NonNull TextDecoration@NonNull... decorations) {
     final Builder builder = builder();
     builder.color(color);
     for(final TextDecoration decoration : decorations) {
@@ -109,7 +110,7 @@ public final class Style {
     return builder.build();
   }
 
-  private Style(final @Nullable TextColor color, final TextDecoration.State obfuscated, final TextDecoration.State bold, final TextDecoration.State strikethrough, final TextDecoration.State underlined, final TextDecoration.State italic, final @Nullable ClickEvent clickEvent, final @Nullable HoverEvent hoverEvent, final @Nullable String insertion) {
+  private Style(final @Nullable TextColor color, final TextDecoration.@NonNull State obfuscated, final TextDecoration.@NonNull State bold, final TextDecoration.@NonNull State strikethrough, final TextDecoration.@NonNull State underlined, final TextDecoration.@NonNull State italic, final @Nullable ClickEvent clickEvent, final @Nullable HoverEvent hoverEvent, final @Nullable String insertion) {
     this.color = color;
     this.obfuscated = obfuscated;
     this.bold = bold;
@@ -233,7 +234,7 @@ public final class Style {
    */
   public @NonNull Set<TextDecoration> decorations(final @NonNull Set<TextDecoration> defaultValues) {
     final Set<TextDecoration> decorations = EnumSet.noneOf(TextDecoration.class);
-    for(final TextDecoration decoration : TextDecoration.values()) {
+    for(final TextDecoration decoration : DECORATIONS) {
       final TextDecoration.State value = this.decoration(decoration);
       if(value == TextDecoration.State.TRUE || (value == TextDecoration.State.NOT_SET && defaultValues.contains(decoration))) {
         decorations.add(decoration);

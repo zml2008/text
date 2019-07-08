@@ -23,6 +23,7 @@
  */
 package net.kyori.text;
 
+import net.kyori.text.format.Style;
 import net.kyori.text.format.TextColor;
 import net.kyori.text.format.TextDecoration;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -106,6 +107,17 @@ public interface TranslatableComponent extends BuildableComponent<TranslatableCo
   }
 
   /**
+   * Creates a translatable component with a translation key and optional style.
+   *
+   * @param key the translation key
+   * @param style the style
+   * @return the translatable component
+   */
+  static @NonNull TranslatableComponent of(final @NonNull String key, final @NonNull Style style) {
+    return builder(key).style(style).build();
+  }
+
+  /**
    * Creates a translatable component with a translation key and arguments.
    *
    * @param key the translation key
@@ -113,7 +125,7 @@ public interface TranslatableComponent extends BuildableComponent<TranslatableCo
    * @return the translatable component
    */
   static @NonNull TranslatableComponent of(final @NonNull String key, final @NonNull Component... args) {
-    return of(key, null, args);
+    return of(key, (TextColor) null, args);
   }
 
   /**
@@ -139,6 +151,18 @@ public interface TranslatableComponent extends BuildableComponent<TranslatableCo
    */
   static @NonNull TranslatableComponent of(final @NonNull String key, final @Nullable TextColor color, final @NonNull Set<TextDecoration> decorations, final @NonNull Component... args) {
     return of(key, color, decorations, Arrays.asList(args));
+  }
+
+  /**
+   * Creates a translatable component with a translation key, arguments, and optional color and decorations.
+   *
+   * @param key the translation key
+   * @param style the style
+   * @param args the translation arguments
+   * @return the translatable component
+   */
+  static @NonNull TranslatableComponent of(final @NonNull String key, final @NonNull Style style, final @NonNull Component... args) {
+    return builder(key).style(style).args(Arrays.asList(args)).build();
   }
 
   /**

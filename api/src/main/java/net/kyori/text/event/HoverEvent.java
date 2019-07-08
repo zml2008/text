@@ -43,17 +43,6 @@ import static java.util.Objects.requireNonNull;
  */
 public final class HoverEvent {
   /**
-   * Creates a hover event.
-   *
-   * @param action the action
-   * @param value the value
-   * @return a click event
-   */
-  public static @NonNull HoverEvent of(final @NonNull Action action, final @NonNull Component value) {
-    return new HoverEvent(action, value);
-  }
-
-  /**
    * Creates a hover event that shows text on hover.
    *
    * @param text the text to show on hover
@@ -81,6 +70,17 @@ public final class HoverEvent {
    */
   public static @NonNull HoverEvent showEntity(final @NonNull Component entity) {
     return of(Action.SHOW_ENTITY, entity);
+  }
+
+  /**
+   * Creates a hover event.
+   *
+   * @param action the action
+   * @param value the value
+   * @return a click event
+   */
+  public static @NonNull HoverEvent of(final @NonNull Action action, final @NonNull Component value) {
+    return new HoverEvent(action, value);
   }
 
   /**

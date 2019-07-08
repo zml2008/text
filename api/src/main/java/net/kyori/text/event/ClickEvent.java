@@ -41,17 +41,6 @@ import static java.util.Objects.requireNonNull;
  */
 public final class ClickEvent {
   /**
-   * Creates a click event.
-   *
-   * @param action the action
-   * @param value the value
-   * @return a click event
-   */
-  public static @NonNull ClickEvent of(final @NonNull Action action, final @NonNull String value) {
-    return new ClickEvent(action, value);
-  }
-
-  /**
    * Creates a click event that opens a url.
    *
    * @param url the url to open
@@ -99,8 +88,8 @@ public final class ClickEvent {
    * @param page the page to change to
    * @return a click event
    */
-  public static @NonNull ClickEvent changePage(final @NonNull String page) {
-    return of(Action.CHANGE_PAGE, page);
+  public static @NonNull ClickEvent changePage(final int page) {
+    return changePage(String.valueOf(page));
   }
 
   /**
@@ -109,8 +98,19 @@ public final class ClickEvent {
    * @param page the page to change to
    * @return a click event
    */
-  public static @NonNull ClickEvent changePage(final int page) {
-    return changePage(String.valueOf(page));
+  public static @NonNull ClickEvent changePage(final @NonNull String page) {
+    return of(Action.CHANGE_PAGE, page);
+  }
+
+  /**
+   * Creates a click event.
+   *
+   * @param action the action
+   * @param value the value
+   * @return a click event
+   */
+  public static @NonNull ClickEvent of(final @NonNull Action action, final @NonNull String value) {
+    return new ClickEvent(action, value);
   }
 
   /**

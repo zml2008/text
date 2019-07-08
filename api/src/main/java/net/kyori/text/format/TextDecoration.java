@@ -72,7 +72,7 @@ public enum TextDecoration implements TextFormat {
     return this.name;
   }
 
-  public static @NonNull Set<TextDecoration> setOf(final @NonNull TextDecoration... decorations) {
+  public static @NonNull Set<TextDecoration> setOf(final @NonNull TextDecoration@NonNull... decorations) {
     final Set<TextDecoration> set = new HashSet<>(decorations.length);
     Collections.addAll(set, decorations);
     return set;
@@ -84,7 +84,7 @@ public enum TextDecoration implements TextFormat {
   public enum State {
     NOT_SET {
       @Override
-      public String toString() {
+      public @NonNull String toString() {
         return "null";
       }
     },
@@ -92,7 +92,7 @@ public enum TextDecoration implements TextFormat {
     TRUE;
 
     @Override
-    public String toString() {
+    public @NonNull String toString() {
       return this.name().toLowerCase();
     }
 
